@@ -33,7 +33,7 @@ class _AuthFormState extends State<AuthForm> {
       return _showError('Please pick an image.');
     }
 
-    widget.onSubmit(_formData);
+    widget.onSubmit.call(_formData);
   }
 
   void _handleImagePick(File file) {
