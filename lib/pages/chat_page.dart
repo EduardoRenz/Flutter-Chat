@@ -1,4 +1,3 @@
-import 'package:chat/core/services/auth/auth_mock_service.dart';
 import 'package:flutter/material.dart';
 
 import '../core/services/auth/auth_service.dart';
@@ -8,7 +7,7 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = AuthMockService();
+    final AuthService authService = AuthService();
 
     return Center(
       child: Column(
