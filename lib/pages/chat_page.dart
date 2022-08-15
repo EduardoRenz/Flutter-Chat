@@ -1,3 +1,5 @@
+import 'package:chat/components/messages.dart';
+import 'package:chat/components/new_message.dart';
 import 'package:flutter/material.dart';
 
 import '../core/services/auth/auth_service.dart';
@@ -9,16 +11,45 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Chat Page'),
-          TextButton(
-            onPressed: () => authService.logout(),
-            child: const Text('Logout'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat Page'),
+        actions: [
+          DropdownButton<String>(
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            items: [
+              DropdownMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.exit_to_app,
+                      color: Colors.black87,
+                    ),
+                    SizedBox(width: 8),
+                    Text('Logout'),
+                  ],
+                ),
+              )
+            ],
+            onChanged: (value) {
+              if (value == 'logout') {
+                authService.logout();
+              }
+            },
           )
         ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: const [
+            Expanded(child: Messages()),
+            NewMessage(),
+          ],
+        ),
       ),
     );
   }
