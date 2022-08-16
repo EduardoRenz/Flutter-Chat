@@ -30,12 +30,12 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const borderRadius = Radius.circular(12);
-    final bubbleSize = MediaQuery.of(context).size.width * 0.8;
+    final bubbleSize = MediaQuery.of(context).size.width * 0.5;
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Row(
-          mainAxisAlignment: belongsToCurrentUser
+          mainAxisAlignment: !belongsToCurrentUser
               ? MainAxisAlignment.start
               : MainAxisAlignment.end,
           children: [
@@ -44,21 +44,21 @@ class MessageBubble extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               width: bubbleSize,
               decoration: BoxDecoration(
-                  color: belongsToCurrentUser
+                  color: !belongsToCurrentUser
                       ? Colors.grey[300]
                       : Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(
                     topLeft: borderRadius,
                     topRight: borderRadius,
-                    bottomLeft: belongsToCurrentUser
+                    bottomLeft: !belongsToCurrentUser
                         ? const Radius.circular(0)
                         : borderRadius,
-                    bottomRight: !belongsToCurrentUser
+                    bottomRight: belongsToCurrentUser
                         ? const Radius.circular(0)
                         : borderRadius,
                   )),
               child: Column(
-                crossAxisAlignment: belongsToCurrentUser
+                crossAxisAlignment: !belongsToCurrentUser
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end,
                 children: [
@@ -66,7 +66,7 @@ class MessageBubble extends StatelessWidget {
                     message.userName,
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: belongsToCurrentUser
+                          color: !belongsToCurrentUser
                               ? Colors.black
                               : Colors.white,
                         ),
@@ -74,7 +74,7 @@ class MessageBubble extends StatelessWidget {
                   Text(
                     message.text,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: belongsToCurrentUser
+                          color: !belongsToCurrentUser
                               ? Colors.black
                               : Colors.white,
                         ),
@@ -86,7 +86,7 @@ class MessageBubble extends StatelessWidget {
         ),
         Positioned(
           top: -5,
-          left: belongsToCurrentUser ? bubbleSize - 20 : 60,
+          left: bubbleSize - 20,
           child: _showUserImage(message.userImageURL),
         )
       ],
