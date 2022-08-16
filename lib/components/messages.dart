@@ -1,3 +1,7 @@
+import 'package:chat/components/message_bubble.dart';
+import 'package:chat/core/models/chat_message.dart';
+import 'package:chat/core/services/auth/auth_service.dart';
+import 'package:chat/core/services/chat/chat_service.dart';
 import 'package:flutter/material.dart';
 
 class Messages extends StatelessWidget {
@@ -5,8 +9,34 @@ class Messages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Messages'),
-    );
+    final currentUser = AuthService().currentUser;
+    return StreamBuilder<List<ChatMessage>>(
+        stream: ChatService().messageStream(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No messages, let\'s start a conversation!'),
+            );
+          }
+
+          final messages = snapshot.data!;
+          return ListView.builder(
+            reverse: true,
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              final message = messages[index];
+              return MessageBubble(
+                  key: ValueKey(message.id),
+                  message: message,
+                  belongsToCurrentUser: currentUser?.id == message.userId);
+            },
+          );
+        }));
   }
 }
