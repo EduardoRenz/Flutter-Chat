@@ -19,7 +19,8 @@ class AuthMockService implements AuthService {
   static MultiStreamController<ChatUser?>? _controller;
   static final _userStream = Stream<ChatUser?>.multi((controller) {
     _controller = controller;
-    setCurrentUser(_defaultUser);
+    //  setCurrentUser(_defaultUser);
+    setCurrentUser(null);
   });
 
   @override
