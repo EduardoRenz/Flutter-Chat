@@ -21,7 +21,9 @@ class ChatNotificationService with ChangeNotifier {
   // Push Notifications
 
   Future<void> init() async {
+    await _configureTerminated();
     await _configureForeground();
+    await _configureBackground();
   }
 
   Future<bool> get _isAuthorized async {
@@ -34,12 +36,27 @@ class ChatNotificationService with ChangeNotifier {
   Future<void> _configureForeground() async {
     if (await _isAuthorized == false) return;
 
-    FirebaseMessaging.onMessage.listen((msg) {
-      if (msg.notification == null) return;
-      add(ChatNotification(
-        title: msg.notification!.title ?? 'Default Message',
-        body: msg.notification!.body ?? 'Body not exists',
-      ));
-    });
+    FirebaseMessaging.onMessage.listen(_messageHandler);
+  }
+
+  Future<void> _configureBackground() async {
+    if (await _isAuthorized == false) return;
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_messageHandler);
+  }
+
+  Future<void> _configureTerminated() async {
+    if (await _isAuthorized == false) return;
+    RemoteMessage? initialMsg =
+        await FirebaseMessaging.instance.getInitialMessage();
+    _messageHandler(initialMsg);
+  }
+
+  void _messageHandler(RemoteMessage? msg) {
+    if (msg == null || msg.notification == null) return;
+    add(ChatNotification(
+      title: msg.notification!.title ?? 'Default Message',
+      body: msg.notification!.body ?? 'Body not exists',
+    ));
   }
 }
