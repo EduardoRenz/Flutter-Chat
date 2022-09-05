@@ -56,7 +56,8 @@ class AuthFirebaseService implements AuthService {
 
       await credential.user?.updateDisplayName(name);
       await credential.user?.updatePhotoURL(imageURL);
-      await _saveChatUser(_toChatUser(credential.user!, imageURL));
+      _currentUser = _toChatUser(credential.user!, name, imageURL);
+      await _saveChatUser(_currentUser!);
     } on Exception catch (e) {
       print(e);
     }
@@ -80,10 +81,10 @@ class AuthFirebaseService implements AuthService {
     });
   }
 
-  static ChatUser _toChatUser(User user, [String? imageURL]) {
+  static ChatUser _toChatUser(User user, [String? name, String? imageURL]) {
     return ChatUser(
       id: user.uid,
-      name: user.displayName ?? user.email!.split('@').first,
+      name: name ?? user.displayName ?? user.email!.split('@').first,
       email: user.email!,
       imageUrl: imageURL ?? user.photoURL ?? 'assets/images/avatar.png',
     );
