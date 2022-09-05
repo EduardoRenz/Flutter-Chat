@@ -29,7 +29,7 @@ class AuthFirebaseService implements AuthService {
         email: email,
         password: password,
       );
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       rethrow;
     }
   }
